@@ -21,6 +21,7 @@ except Exception:  # pragma: no cover
 HERE = Path(__file__).parent
 CSV_PATH = HERE / "portfolio.csv"
 OUTPUT_PATH = HERE / "portfolio_dashboard.html"
+CHARTJS_PATH = HERE / "vendor" / "chart.umd.min.js"
 JST = timezone(timedelta(hours=9))
 
 # Latest close / latest quote retrieved from public sources (Yahoo Finance Japan
@@ -137,7 +138,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>__CHARTJS__</script>
 <style>
 :root {
   --bg: #0f1b2d;
@@ -608,8 +609,9 @@ renderBar();
 
 def main() -> None:
     snapshot = build_snapshot()
+    chartjs = CHARTJS_PATH.read_text(encoding="utf-8") if CHARTJS_PATH.exists() else ""
     payload = json.dumps(snapshot, ensure_ascii=False)
-    html = HTML_TEMPLATE.replace("__DATA__", payload)
+    html = HTML_TEMPLATE.replace("__CHARTJS__", chartjs).replace("__DATA__", payload)
     OUTPUT_PATH.write_text(html, encoding="utf-8")
     print(f"\nwrote {OUTPUT_PATH} ({len(html):,} bytes)")
     s = snapshot["summary"]

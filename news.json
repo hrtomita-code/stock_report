@@ -1,0 +1,144 @@
+{
+  "_comment": "Hand-curated news headlines per holding. Refreshed via WebSearch when build.py is re-run by Claude Code. Each item must include title/source/date(YYYY-MM-DD)/url. Items missing any field are dropped at build time.",
+  "as_of": "2026-05-07",
+  "news": {
+    "7203": [
+      {
+        "title": "トヨタ自動車、今期最終は35％減益、5円増配へ",
+        "source": "株探ニュース",
+        "date": "2026-05-08",
+        "url": "https://kabutan.jp/news/?b=k202505080041",
+        "summary": "通期見通しで純利益が前期比34.9%減の3.1兆円。年間配当は5円増の95円に増配方針。"
+      },
+      {
+        "title": "2026年の株式展望 自動車関連企業",
+        "source": "財経新聞",
+        "date": "2026-01-02",
+        "url": "https://www.zaikei.co.jp/article/20260102/838464.html",
+        "summary": "米国関税政策の影響で営業利益への減益影響を1.45兆円織り込む見通し。"
+      },
+      {
+        "title": "トヨタ自動車の2025年3月期決算徹底解説と2026年3月期展望",
+        "source": "note (浅見純一郎)",
+        "date": "2026-05-08",
+        "url": "https://note.com/jasami/n/nbe47355f5536",
+        "summary": "前期比でみた営業利益率は8.9%へ低下。EV戦略と米国関税が当面の主要逆風。"
+      }
+    ],
+    "9984": [
+      {
+        "title": "ソフトバンクG、OpenAIに最大300億ドル追加出資も－関係者",
+        "source": "Bloomberg",
+        "date": "2026-01-28",
+        "url": "https://www.bloomberg.com/jp/news/articles/2026-01-28/T9JTORKJH6V600",
+        "summary": "OpenAIへの追加出資協議を進めていると報じられた。AI関連投資加速の象徴。"
+      },
+      {
+        "title": "ソフトバンクGの事情、OpenAI全賭けから読み解く－流動性リスク注視",
+        "source": "Bloomberg",
+        "date": "2026-04-20",
+        "url": "https://www.bloomberg.com/jp/news/articles/2026-04-20/TDROIMT96OSH00",
+        "summary": "OpenAIへの巨額投資を継続する一方で、債務拡大による流動性リスクへの警戒も。"
+      },
+      {
+        "title": "ソフトバンクG、OpenAI株を担保に100億ドルのローン模索－関係者",
+        "source": "Bloomberg / Yahoo!ニュース",
+        "date": "2026-04-23",
+        "url": "https://news.yahoo.co.jp/articles/75c96c5a9282a9efc77ebdc795cbae59254a33ed",
+        "summary": "OpenAI株を担保にしたマージンローン調達を検討。AI投資のための資金繰り強化策。"
+      }
+    ],
+    "6758": [
+      {
+        "title": "ソニーグループ、低迷株価に反転期待 8日決算 メモリ不足解消焦点",
+        "source": "IG",
+        "date": "2026-04-28",
+        "url": "https://www.ig.com/jp/news-and-trade-ideas/sonygroup-202601-03-earnings-report-preview-260428",
+        "summary": "5月8日決算でメモリ半導体不足の解消進展度合いが焦点。中長期調達に自信を示せれば反転期待。"
+      },
+      {
+        "title": "ソニーグループの株価は前日比+0.10％の上昇。配当利回りは0.72％",
+        "source": "LIMO",
+        "date": "2026-05-07",
+        "url": "https://limo.media/articles/-/123421",
+        "summary": "5月7日終値3,130円。11月14日高値4,700円から約32%安の水準で推移。"
+      }
+    ],
+    "8306": [
+      {
+        "title": "三菱UFJフィナンシャル・グループ、5期連続「増配」を発表、配当利回り3.0％に",
+        "source": "ダイヤモンド・ザイ",
+        "date": "2025-11-14",
+        "url": "https://diamond.jp/zai/articles/-/1059170",
+        "summary": "2026年3月期の年間配当を1株74円に上方修正。5期連続増配で配当額は5年で2.9倍。"
+      },
+      {
+        "title": "通期業績目標の修正および期末配当予想の修正について",
+        "source": "三菱UFJ IR",
+        "date": "2025-11-14",
+        "url": "https://www.mufg.jp/dam/pressrelease/2025/pdf/news-20251114-001_ja.pdf",
+        "summary": "親会社株主に帰属する純利益見通しを引き上げ、期末配当予想も上方修正。"
+      }
+    ],
+    "9433": [
+      {
+        "title": "KDDI子会社で2460億円の架空取引、広告代理事業で循環取引",
+        "source": "DFE",
+        "date": "2026-02-06",
+        "url": "https://dfe.jp/blog/%E3%80%90%E4%B8%8D%E6%AD%A3%E7%B5%8C%E7%90%86%E4%BA%8B%E4%BB%B6%E7%B0%BF%E3%80%91kddi%E5%AD%90%E4%BC%9A%E7%A4%BE%E3%81%A72460%E5%84%84%E5%86%86%E3%81%AE%E6%9E%B6%E7%A9%BA%E5%8F%96%E5%BC%95%E3%80%82/",
+        "summary": "連結子会社のビッグローブ等で2017年度から9年間にわたる循環取引を確認。約330億円が社外流出した可能性。"
+      },
+      {
+        "title": "KDDI、傘下企業で不適切取引の疑い 特別委設置で詳細調査へ",
+        "source": "日本経済新聞",
+        "date": "2026-01-14",
+        "url": "https://www.nikkei.com/article/DGXZQOUC146RE0U6A110C2000000/",
+        "summary": "傘下企業で不適切取引の疑い。特別調査委員会を設置し、過年度決算の修正方針も。"
+      },
+      {
+        "title": "2,461億円不正会計、KDDIそれでも「買い」継続の三つの理由",
+        "source": "楽天証券トウシル",
+        "date": "2026-04-15",
+        "url": "https://media.rakuten-sec.net/articles/-/52040",
+        "summary": "不正会計の影響は限定的との見方。本業の通信は堅調、配当方針も維持の見込み。"
+      }
+    ]
+  },
+  "watchpoints": {
+    "7203": [
+      "2026年5月8日 通期決算発表（実績：純利益-34.9%、95円増配）",
+      "米国関税政策の業績影響（営業利益への影響見込み 1.45兆円）"
+    ],
+    "9984": [
+      "2026年5月13日 通期決算発表予定",
+      "OpenAI関連の追加出資・担保ローン交渉の進捗",
+      "AIインフラ投資による有利子負債とキャッシュフロー注視"
+    ],
+    "6758": [
+      "2026年5月8日 通期決算発表予定（メモリ半導体調達状況が焦点）",
+      "2024年10月の5:1株式分割を反映した取得単価の見直し要否を確認",
+      "PS事業のメモリ供給制約と円安のバランス"
+    ],
+    "8306": [
+      "2026年5月15日 通期決算発表予定",
+      "5期連続増配・自己株買いの継続性",
+      "金利環境の変化と業績連動性"
+    ],
+    "9433": [
+      "2026年5月中旬 通期決算発表予定（過年度修正後の数値に注視）",
+      "ビッグローブ等子会社の循環取引に伴う特別損失計上額の確定",
+      "2024年4月の2:1株式分割を反映した取得単価の見直し要否を確認"
+    ]
+  },
+  "price_snapshot": {
+    "_comment": "Manual fallback when yfinance is unreachable. Sourced 2026-05-07 from Yahoo!ファイナンス / kabutan / みんかぶ.",
+    "as_of": "2026-05-07 15:30 JST",
+    "prices": {
+      "7203": {"current": 2978.0, "previous_close": 3000.0},
+      "9984": {"current": 6163.0, "previous_close": 5424.0},
+      "6758": {"current": 3130.0, "previous_close": 3127.0},
+      "8306": {"current": 2798.0, "previous_close": 2817.0},
+      "9433": {"current": 2530.5, "previous_close": 2548.0}
+    }
+  }
+}

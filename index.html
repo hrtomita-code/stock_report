@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>保有株ブリーフィング ダッシュボード</title>
+<style>
+:root {
+  --bg: #f5f6fa;
+  --ink: #1f2735;
+  --ink-soft: #4a5568;
+  --muted: #7b8597;
+  --border: #e2e6ee;
+  --card: #ffffff;
+  --header-bg: #1c2541;
+  --header-ink: #f5f6fa;
+  --accent: #2f4b7c;
+  --green: #1b8a5a;
+  --green-soft: #e2f4eb;
+  --red: #c0392b;
+  --red-soft: #fbe7e3;
+  --yellow: #b78100;
+  --yellow-soft: #fbf2dc;
+  --shadow: 0 4px 14px rgba(28, 37, 65, 0.06);
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic UI", "Meiryo", "Segoe UI", sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.container { max-width: 1280px; margin: 0 auto; padding: 24px 20px 48px; }
+
+header.top {
+  background: var(--header-bg);
+  color: var(--header-ink);
+  padding: 24px 28px;
+  border-radius: 14px;
+  margin-bottom: 22px;
+}
+header.top h1 { margin: 0 0 6px; font-size: 20px; letter-spacing: 0.04em; }
+header.top .updated { font-size: 12px; opacity: 0.75; }
+header.top .disclaimer {
+  margin-top: 14px; padding: 10px 14px;
+  background: rgba(255,255,255,0.08);
+  border-left: 3px solid #f5c518;
+  border-radius: 6px;
+  font-size: 12px; line-height: 1.5;
+}
+.summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px; margin-top: 18px;
+}
+.kpi {
+  background: rgba(255,255,255,0.07);
+  padding: 12px 16px;
+  border-radius: 10px;
+}
+.kpi .label { font-size: 11px; opacity: 0.75; letter-spacing: 0.08em; }
+.kpi .value { font-size: 22px; font-weight: 700; margin-top: 4px; }
+.kpi .sub { font-size: 13px; margin-top: 2px; opacity: 0.85; }
+.pos { color: #6fe7b3; }
+.neg { color: #ffb4ab; }
+
+.toolbar {
+  background: var(--card);
+  padding: 14px 18px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  margin-bottom: 18px;
+  display: flex; flex-wrap: wrap; gap: 18px; align-items: center;
+}
+.toolbar-group { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.toolbar label { font-size: 12px; color: var(--muted); margin-right: 4px; letter-spacing: 0.04em; }
+.toolbar input[type=text] {
+  padding: 7px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  width: 200px;
+  font-family: inherit;
+}
+.toolbar select {
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  background: #fff;
+  font-family: inherit;
+}
+.chk { display: inline-flex; gap: 6px; align-items: center; font-size: 13px; cursor: pointer; user-select: none; }
+.chk input { margin: 0; }
+.badge-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
+.dot-sell { background: var(--red); }
+.dot-watch { background: var(--yellow); }
+.dot-hold { background: var(--green); }
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 16px;
+}
+.card {
+  background: var(--card);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  padding: 18px 20px 16px;
+  display: flex; flex-direction: column;
+  border-top: 4px solid transparent;
+}
+.card.cls-sell  { border-top-color: var(--red); }
+.card.cls-watch { border-top-color: var(--yellow); }
+.card.cls-hold  { border-top-color: var(--green); }
+.card.cls-error { border-top-color: var(--muted); }
+
+.card-head {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 12px; margin-bottom: 10px;
+}
+.card-head .name { font-size: 16px; font-weight: 700; color: var(--ink); }
+.card-head .code { font-size: 12px; color: var(--muted); letter-spacing: 0.06em; margin-top: 2px; }
+
+.badge {
+  font-size: 12px; font-weight: 700;
+  padding: 4px 10px; border-radius: 999px;
+  white-space: nowrap;
+}
+.badge.cls-sell  { background: var(--red-soft); color: var(--red); }
+.badge.cls-watch { background: var(--yellow-soft); color: var(--yellow); }
+.badge.cls-hold  { background: var(--green-soft); color: var(--green); }
+.badge.cls-error { background: #eef0f5; color: var(--muted); }
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px 14px;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.metric .label { font-size: 11px; color: var(--muted); letter-spacing: 0.04em; }
+.metric .value { font-size: 14px; font-weight: 600; margin-top: 2px; }
+.metric .value.big { font-size: 16px; }
+
+.reasons {
+  margin: 12px 0 8px;
+  padding: 10px 12px;
+  background: #f8fafc;
+  border-radius: 8px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+.reasons .label { font-size: 11px; color: var(--muted); letter-spacing: 0.06em; margin-bottom: 4px; }
+.reasons ul { margin: 0; padding-left: 18px; }
+.reasons li { margin: 2px 0; }
+
+.section-h {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  margin: 12px 0 6px;
+  text-transform: uppercase;
+}
+.news-list, .watch-list { margin: 0; padding: 0; list-style: none; }
+.news-item {
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--border);
+  font-size: 13px;
+}
+.news-item:last-child { border-bottom: none; }
+.news-item .title { font-weight: 500; line-height: 1.4; display: block; }
+.news-item .meta {
+  font-size: 11px; color: var(--muted); margin-top: 3px;
+}
+.news-item .summary {
+  font-size: 12px; color: var(--ink-soft); margin-top: 4px; line-height: 1.5;
+}
+.watch-list li {
+  font-size: 12.5px;
+  padding: 4px 0 4px 18px;
+  position: relative;
+  color: var(--ink-soft);
+}
+.watch-list li::before {
+  content: "▸";
+  position: absolute;
+  left: 4px;
+  color: var(--accent);
+}
+
+.empty-news {
+  font-size: 12px;
+  color: var(--muted);
+  padding: 4px 0;
+  font-style: italic;
+}
+.error-box {
+  background: var(--red-soft);
+  color: var(--red);
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin: 10px 0;
+}
+
+footer.bottom {
+  margin-top: 32px;
+  padding: 16px 20px;
+  background: #fff;
+  border-radius: 10px;
+  font-size: 12px;
+  color: var(--muted);
+  box-shadow: var(--shadow);
+}
+footer.bottom strong { color: var(--ink-soft); }
+
+.empty-grid {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 28px;
+  color: var(--muted);
+  background: #fff;
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+@media (max-width: 540px) {
+  header.top { padding: 18px 18px; }
+  header.top h1 { font-size: 17px; }
+  .toolbar { flex-direction: column; align-items: stretch; }
+  .toolbar-group { width: 100%; }
+  .toolbar input[type=text] { width: 100%; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header class="top">
+    <h1>保有株ブリーフィング ダッシュボード</h1>
+    <div class="updated">最終更新: <span id="updated-at"></span> ／ ¥は税込み計算なしの単純評価</div>
+    <div class="summary">
+      <div class="kpi">
+        <div class="label">取得原価合計</div>
+        <div class="value" id="kpi-cost"></div>
+      </div>
+      <div class="kpi">
+        <div class="label">現在評価額</div>
+        <div class="value" id="kpi-value"></div>
+      </div>
+      <div class="kpi">
+        <div class="label">含み損益</div>
+        <div class="value" id="kpi-pl"></div>
+        <div class="sub" id="kpi-pl-pct"></div>
+      </div>
+      <div class="kpi">
+        <div class="label">分類サマリ</div>
+        <div class="value" id="kpi-classes" style="font-size:14px; line-height:1.7"></div>
+      </div>
+    </div>
+    <div class="disclaimer">
+      <strong>免責事項:</strong> 本ツールは個人の判断補助を目的としたダッシュボードであり、投資推奨ではありません。
+      表示される分類はあくまで機械的なルール（損益率の閾値とキーワードマッチ）に基づくものであり、最終的な投資判断はご自身の責任で行ってください。
+      価格・ニュースは取得時点のものであり、最新の市場状況を反映していない場合があります。
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <div class="toolbar-group">
+      <label>分類:</label>
+      <label class="chk"><input type="checkbox" data-cls="sell" checked><span class="badge-dot dot-sell"></span>売却検討</label>
+      <label class="chk"><input type="checkbox" data-cls="watch" checked><span class="badge-dot dot-watch"></span>様子見</label>
+      <label class="chk"><input type="checkbox" data-cls="hold" checked><span class="badge-dot dot-hold"></span>継続保有</label>
+    </div>
+    <div class="toolbar-group">
+      <label>銘柄検索:</label>
+      <input type="text" id="search" placeholder="銘柄名・コード">
+    </div>
+    <div class="toolbar-group">
+      <label>並び順:</label>
+      <select id="sort">
+        <option value="pl_pct_desc">損益率（降順）</option>
+        <option value="pl_pct_asc">損益率（昇順）</option>
+        <option value="current_desc">現在価格（降順）</option>
+        <option value="current_asc">現在価格（昇順）</option>
+        <option value="value_desc">評価額（降順）</option>
+        <option value="value_asc">評価額（昇順）</option>
+        <option value="code_asc">銘柄コード順</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="cards" id="cards"></div>
+
+  <footer class="bottom">
+    <strong>免責:</strong> 本ダッシュボードは情報提供のみを目的としており、特定の銘柄の売買を推奨するものではありません。
+    投資判断はご自身の責任において行ってください。データはYahoo!ファイナンス、株探、Bloomberg、日本経済新聞、各社IR等を参照しています。
+    分類閾値: 売却検討 ≦ <span id="th-sell"></span>%、様子見 ≦ <span id="th-watch"></span>%。
+  </footer>
+</div>
+
+<script>
+const DATA = {"updated_at": "2026-05-08 02:16:46 JST", "thresholds": {"sell": -15.0, "watch": 0.0, "severe_keywords": ["不正", "架空", "粉飾", "不適切取引", "違反", "経営悪化", "巨額損失"], "mild_keywords": ["下方修正", "減益", "リコール", "業績悪化", "訴訟", "減配", "減産"]}, "cards": [{"code": "7203", "name": "トヨタ自動車", "shares": 100, "cost_price": 2850.0, "acquired_at": "2024-06-15", "ok": true, "current_price": 2978.0, "previous_close": 3000.0, "day_change": -22.0, "day_change_pct": -0.7333, "cost_total": 285000.0, "market_value": 297800.0, "pl": 12800.0, "pl_pct": 4.4912, "price_source": "snapshot (2026-05-07 15:30 JST)", "classification": {"level": "watch", "label": "様子見", "icon": "🟡", "reasons": ["損益率 +4.49%", "業績注意キーワード: 減益"]}, "news": [{"title": "トヨタ自動車、今期最終は35％減益、5円増配へ", "source": "株探ニュース", "date": "2026-05-08", "url": "https://kabutan.jp/news/?b=k202505080041", "summary": "通期見通しで純利益が前期比34.9%減の3.1兆円。年間配当は5円増の95円に増配方針。"}, {"title": "2026年の株式展望 自動車関連企業", "source": "財経新聞", "date": "2026-01-02", "url": "https://www.zaikei.co.jp/article/20260102/838464.html", "summary": "米国関税政策の影響で営業利益への減益影響を1.45兆円織り込む見通し。"}, {"title": "トヨタ自動車の2025年3月期決算徹底解説と2026年3月期展望", "source": "note (浅見純一郎)", "date": "2026-05-08", "url": "https://note.com/jasami/n/nbe47355f5536", "summary": "前期比でみた営業利益率は8.9%へ低下。EV戦略と米国関税が当面の主要逆風。"}], "watchpoints": ["2026年5月8日 通期決算発表（実績：純利益-34.9%、95円増配）", "米国関税政策の業績影響（営業利益への影響見込み 1.45兆円）"]}, {"code": "9984", "name": "ソフトバンクグループ", "shares": 50, "cost_price": 8200.0, "acquired_at": "2024-08-20", "ok": true, "current_price": 6163.0, "previous_close": 5424.0, "day_change": 739.0, "day_change_pct": 13.6246, "cost_total": 410000.0, "market_value": 308150.0, "pl": -101850.0, "pl_pct": -24.8415, "price_source": "snapshot (2026-05-07 15:30 JST)", "classification": {"level": "sell", "label": "売却検討", "icon": "🔴", "reasons": ["損益率 -24.84%", "閾値 -15% を下回っています"]}, "news": [{"title": "ソフトバンクG、OpenAIに最大300億ドル追加出資も－関係者", "source": "Bloomberg", "date": "2026-01-28", "url": "https://www.bloomberg.com/jp/news/articles/2026-01-28/T9JTORKJH6V600", "summary": "OpenAIへの追加出資協議を進めていると報じられた。AI関連投資加速の象徴。"}, {"title": "ソフトバンクGの事情、OpenAI全賭けから読み解く－流動性リスク注視", "source": "Bloomberg", "date": "2026-04-20", "url": "https://www.bloomberg.com/jp/news/articles/2026-04-20/TDROIMT96OSH00", "summary": "OpenAIへの巨額投資を継続する一方で、債務拡大による流動性リスクへの警戒も。"}, {"title": "ソフトバンクG、OpenAI株を担保に100億ドルのローン模索－関係者", "source": "Bloomberg / Yahoo!ニュース", "date": "2026-04-23", "url": "https://news.yahoo.co.jp/articles/75c96c5a9282a9efc77ebdc795cbae59254a33ed", "summary": "OpenAI株を担保にしたマージンローン調達を検討。AI投資のための資金繰り強化策。"}], "watchpoints": ["2026年5月13日 通期決算発表予定", "OpenAI関連の追加出資・担保ローン交渉の進捗", "AIインフラ投資による有利子負債とキャッシュフロー注視"]}, {"code": "6758", "name": "ソニーグループ", "shares": 30, "cost_price": 13500.0, "acquired_at": "2024-03-10", "ok": true, "current_price": 3130.0, "previous_close": 3127.0, "day_change": 3.0, "day_change_pct": 0.0959, "cost_total": 405000.0, "market_value": 93900.0, "pl": -311100.0, "pl_pct": -76.8148, "price_source": "snapshot (2026-05-07 15:30 JST)", "classification": {"level": "sell", "label": "売却検討", "icon": "🔴", "reasons": ["損益率 -76.81%", "閾値 -15% を下回っています"]}, "news": [{"title": "ソニーグループ、低迷株価に反転期待 8日決算 メモリ不足解消焦点", "source": "IG", "date": "2026-04-28", "url": "https://www.ig.com/jp/news-and-trade-ideas/sonygroup-202601-03-earnings-report-preview-260428", "summary": "5月8日決算でメモリ半導体不足の解消進展度合いが焦点。中長期調達に自信を示せれば反転期待。"}, {"title": "ソニーグループの株価は前日比+0.10％の上昇。配当利回りは0.72％", "source": "LIMO", "date": "2026-05-07", "url": "https://limo.media/articles/-/123421", "summary": "5月7日終値3,130円。11月14日高値4,700円から約32%安の水準で推移。"}], "watchpoints": ["2026年5月8日 通期決算発表予定（メモリ半導体調達状況が焦点）", "2024年10月の5:1株式分割を反映した取得単価の見直し要否を確認", "PS事業のメモリ供給制約と円安のバランス"]}, {"code": "8306", "name": "三菱UFJフィナンシャル・グループ", "shares": 200, "cost_price": 1650.0, "acquired_at": "2024-09-05", "ok": true, "current_price": 2798.0, "previous_close": 2817.0, "day_change": -19.0, "day_change_pct": -0.6745, "cost_total": 330000.0, "market_value": 559600.0, "pl": 229600.0, "pl_pct": 69.5758, "price_source": "snapshot (2026-05-07 15:30 JST)", "classification": {"level": "hold", "label": "継続保有", "icon": "🟢", "reasons": ["損益率 +69.58%", "懸念ニュースなし"]}, "news": [{"title": "三菱UFJフィナンシャル・グループ、5期連続「増配」を発表、配当利回り3.0％に", "source": "ダイヤモンド・ザイ", "date": "2025-11-14", "url": "https://diamond.jp/zai/articles/-/1059170", "summary": "2026年3月期の年間配当を1株74円に上方修正。5期連続増配で配当額は5年で2.9倍。"}, {"title": "通期業績目標の修正および期末配当予想の修正について", "source": "三菱UFJ IR", "date": "2025-11-14", "url": "https://www.mufg.jp/dam/pressrelease/2025/pdf/news-20251114-001_ja.pdf", "summary": "親会社株主に帰属する純利益見通しを引き上げ、期末配当予想も上方修正。"}], "watchpoints": ["2026年5月15日 通期決算発表予定", "5期連続増配・自己株買いの継続性", "金利環境の変化と業績連動性"]}, {"code": "9433", "name": "KDDI", "shares": 80, "cost_price": 4800.0, "acquired_at": "2024-07-22", "ok": true, "current_price": 2530.5, "previous_close": 2548.0, "day_change": -17.5, "day_change_pct": -0.6868, "cost_total": 384000.0, "market_value": 202440.0, "pl": -181560.0, "pl_pct": -47.2812, "price_source": "snapshot (2026-05-07 15:30 JST)", "classification": {"level": "sell", "label": "売却検討", "icon": "🔴", "reasons": ["損益率 -47.28%", "重大ネガティブニュース: 架空 / 不適切取引 / 不正", "閾値 -15% を下回っています"]}, "news": [{"title": "KDDI子会社で2460億円の架空取引、広告代理事業で循環取引", "source": "DFE", "date": "2026-02-06", "url": "https://dfe.jp/blog/%E3%80%90%E4%B8%8D%E6%AD%A3%E7%B5%8C%E7%90%86%E4%BA%8B%E4%BB%B6%E7%B0%BF%E3%80%91kddi%E5%AD%90%E4%BC%9A%E7%A4%BE%E3%81%A72460%E5%84%84%E5%86%86%E3%81%AE%E6%9E%B6%E7%A9%BA%E5%8F%96%E5%BC%95%E3%80%82/", "summary": "連結子会社のビッグローブ等で2017年度から9年間にわたる循環取引を確認。約330億円が社外流出した可能性。"}, {"title": "KDDI、傘下企業で不適切取引の疑い 特別委設置で詳細調査へ", "source": "日本経済新聞", "date": "2026-01-14", "url": "https://www.nikkei.com/article/DGXZQOUC146RE0U6A110C2000000/", "summary": "傘下企業で不適切取引の疑い。特別調査委員会を設置し、過年度決算の修正方針も。"}, {"title": "2,461億円不正会計、KDDIそれでも「買い」継続の三つの理由", "source": "楽天証券トウシル", "date": "2026-04-15", "url": "https://media.rakuten-sec.net/articles/-/52040", "summary": "不正会計の影響は限定的との見方。本業の通信は堅調、配当方針も維持の見込み。"}], "watchpoints": ["2026年5月中旬 通期決算発表予定（過年度修正後の数値に注視）", "ビッグローブ等子会社の循環取引に伴う特別損失計上額の確定", "2024年4月の2:1株式分割を反映した取得単価の見直し要否を確認"]}], "summary": {"total_cost": 1814000.0, "total_value": 1461890.0, "total_pl": -352110.0, "total_pl_pct": -19.4107, "count": 5, "ok_count": 5}};
+
+const yen = (n) => "¥" + Math.round(n).toLocaleString("ja-JP");
+const yenSigned = (n) => (n >= 0 ? "+" : "-") + "¥" + Math.round(Math.abs(n)).toLocaleString("ja-JP");
+const pct = (n) => (n >= 0 ? "+" : "") + n.toFixed(2) + "%";
+const fmtPrice = (n) => "¥" + n.toLocaleString("ja-JP", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+const escapeHtml = (s) => String(s).replace(/[&<>"']/g, (c) => ({
+  "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;",
+}[c]));
+
+const state = {
+  show: { sell: true, watch: true, hold: true, error: true },
+  search: "",
+  sort: "pl_pct_desc",
+};
+
+document.getElementById("updated-at").textContent = DATA.updated_at;
+document.getElementById("th-sell").textContent = DATA.thresholds.sell;
+document.getElementById("th-watch").textContent = DATA.thresholds.watch;
+
+function renderSummary() {
+  const s = DATA.summary;
+  document.getElementById("kpi-cost").textContent = yen(s.total_cost);
+  document.getElementById("kpi-value").textContent = yen(s.total_value);
+  const plEl = document.getElementById("kpi-pl");
+  const pctEl = document.getElementById("kpi-pl-pct");
+  plEl.textContent = yenSigned(s.total_pl);
+  pctEl.textContent = pct(s.total_pl_pct);
+  const cls = s.total_pl >= 0 ? "pos" : "neg";
+  plEl.classList.add(cls);
+  pctEl.classList.add(cls);
+
+  const counts = { sell: 0, watch: 0, hold: 0, error: 0 };
+  DATA.cards.forEach((c) => {
+    if (!c.ok) counts.error++;
+    else counts[c.classification.level]++;
+  });
+  document.getElementById("kpi-classes").innerHTML =
+    `<span style="color:#ffb4ab">🔴 ${counts.sell}</span> / ` +
+    `<span style="color:#f5c518">🟡 ${counts.watch}</span> / ` +
+    `<span style="color:#6fe7b3">🟢 ${counts.hold}</span>` +
+    (counts.error ? ` / <span style="opacity:0.7">⚠ ${counts.error}</span>` : "");
+}
+
+function getFilteredSorted() {
+  const q = state.search.trim().toLowerCase();
+  let rows = DATA.cards.filter((c) => {
+    const lvl = c.ok ? c.classification.level : "error";
+    if (!state.show[lvl]) return false;
+    if (q) {
+      const hay = (c.name + " " + c.code).toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+  const cmp = (a, b, key, dir) => {
+    const av = a[key] ?? -Infinity;
+    const bv = b[key] ?? -Infinity;
+    return (av - bv) * dir;
+  };
+  switch (state.sort) {
+    case "pl_pct_desc":  rows.sort((a,b) => cmp(a,b,"pl_pct",-1)); break;
+    case "pl_pct_asc":   rows.sort((a,b) => cmp(a,b,"pl_pct", 1)); break;
+    case "current_desc": rows.sort((a,b) => cmp(a,b,"current_price",-1)); break;
+    case "current_asc":  rows.sort((a,b) => cmp(a,b,"current_price", 1)); break;
+    case "value_desc":   rows.sort((a,b) => cmp(a,b,"market_value",-1)); break;
+    case "value_asc":    rows.sort((a,b) => cmp(a,b,"market_value", 1)); break;
+    case "code_asc":     rows.sort((a,b) => String(a.code).localeCompare(b.code)); break;
+  }
+  return rows;
+}
+
+function newsHtml(news) {
+  if (!news || news.length === 0) {
+    return '<div class="empty-news">直近の信頼できるニュースは見つかりませんでした。</div>';
+  }
+  return '<ul class="news-list">' + news.map((n) => `
+    <li class="news-item">
+      <a class="title" href="${escapeHtml(n.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(n.title)}</a>
+      <div class="meta">${escapeHtml(n.source)} ／ ${escapeHtml(n.date)}</div>
+      ${n.summary ? `<div class="summary">${escapeHtml(n.summary)}</div>` : ""}
+    </li>`).join("") + "</ul>";
+}
+
+function watchHtml(items) {
+  if (!items || items.length === 0) return "";
+  return '<ul class="watch-list">' + items.map((w) => `<li>${escapeHtml(w)}</li>`).join("") + "</ul>";
+}
+
+function cardHtml(c) {
+  if (!c.ok) {
+    return `
+      <div class="card cls-error">
+        <div class="card-head">
+          <div>
+            <div class="name">${escapeHtml(c.name)}</div>
+            <div class="code">${escapeHtml(c.code)} ／ ${escapeHtml(c.acquired_at)}取得</div>
+          </div>
+          <span class="badge cls-error">取得失敗</span>
+        </div>
+        <div class="error-box">価格データを取得できませんでした: ${escapeHtml(c.error || "原因不明")}</div>
+        <div class="metrics">
+          <div class="metric"><div class="label">保有株数</div><div class="value">${c.shares.toLocaleString("ja-JP")} 株</div></div>
+          <div class="metric"><div class="label">取得単価</div><div class="value">${fmtPrice(c.cost_price)}</div></div>
+        </div>
+        <div class="section-h">関連ニュース</div>
+        ${newsHtml(c.news)}
+        ${c.watchpoints && c.watchpoints.length ? `<div class="section-h">観察ポイント</div>${watchHtml(c.watchpoints)}` : ""}
+      </div>`;
+  }
+  const lvl = c.classification.level;
+  const plCls = c.pl >= 0 ? "pos" : "neg";
+  const dayCls = c.day_change > 0 ? "pos" : c.day_change < 0 ? "neg" : "";
+  const dayChangeStr = c.day_change == null
+    ? "-"
+    : `${yenSigned(c.day_change)} (${pct(c.day_change_pct)})`;
+  return `
+    <div class="card cls-${lvl}">
+      <div class="card-head">
+        <div>
+          <div class="name">${escapeHtml(c.name)}</div>
+          <div class="code">${escapeHtml(c.code)} ／ ${escapeHtml(c.acquired_at)}取得</div>
+        </div>
+        <span class="badge cls-${lvl}">${c.classification.icon} ${escapeHtml(c.classification.label)}</span>
+      </div>
+      <div class="metrics">
+        <div class="metric"><div class="label">現在価格</div><div class="value big">${fmtPrice(c.current_price)}</div></div>
+        <div class="metric"><div class="label">前日比</div><div class="value ${dayCls}">${dayChangeStr}</div></div>
+        <div class="metric"><div class="label">保有株数 / 取得単価</div><div class="value">${c.shares.toLocaleString("ja-JP")}株 / ${fmtPrice(c.cost_price)}</div></div>
+        <div class="metric"><div class="label">評価額</div><div class="value">${yen(c.market_value)}</div></div>
+        <div class="metric"><div class="label">含み損益</div><div class="value big ${plCls}">${yenSigned(c.pl)}</div></div>
+        <div class="metric"><div class="label">含み損益率</div><div class="value ${plCls}">${pct(c.pl_pct)}</div></div>
+      </div>
+      <div class="reasons">
+        <div class="label">分類根拠</div>
+        <ul>${c.classification.reasons.map((r) => `<li>${escapeHtml(r)}</li>`).join("")}</ul>
+      </div>
+      <div class="section-h">直近のニュース（最大3件）</div>
+      ${newsHtml(c.news)}
+      ${c.watchpoints && c.watchpoints.length ? `<div class="section-h">観察ポイント</div>${watchHtml(c.watchpoints)}` : ""}
+      <div style="margin-top:auto; font-size:11px; color:var(--muted); padding-top:10px">価格ソース: ${escapeHtml(c.price_source)}</div>
+    </div>`;
+}
+
+function render() {
+  const rows = getFilteredSorted();
+  const root = document.getElementById("cards");
+  if (rows.length === 0) {
+    root.innerHTML = '<div class="empty-grid">条件に該当する銘柄がありません</div>';
+  } else {
+    root.innerHTML = rows.map(cardHtml).join("");
+  }
+}
+
+document.querySelectorAll('.toolbar input[type=checkbox]').forEach((cb) => {
+  cb.addEventListener("change", () => {
+    state.show[cb.dataset.cls] = cb.checked;
+    render();
+  });
+});
+document.getElementById("search").addEventListener("input", (e) => {
+  state.search = e.target.value;
+  render();
+});
+document.getElementById("sort").addEventListener("change", (e) => {
+  state.sort = e.target.value;
+  render();
+});
+
+renderSummary();
+render();
+</script>
+</body>
+</html>

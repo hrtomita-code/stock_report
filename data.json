@@ -1,0 +1,264 @@
+{
+  "generated_at": "2026-05-07T15:30:00+09:00",
+  "currency": "JPY",
+  "data_source_note": "価格・前日比・52週レンジは公開Web検索からの集計値（2026-05-07時点の発表ベース）。fetch.py をローカルで実行すれば yfinance から再取得できます。",
+  "summary": {
+    "total_cost": 1814000,
+    "total_value": 2844400,
+    "total_pnl": 1030400,
+    "total_pnl_pct": 56.80,
+    "category_counts": {
+      "売却検討": 1,
+      "様子見": 1,
+      "継続保有": 3
+    }
+  },
+  "category_rule": "PnL率 <= -20% → 売却検討 / -20% < PnL率 < +5% → 様子見 / PnL率 >= +5% → 継続保有（ニュース要因は判定理由に併記、カテゴリは数値ルールで一意）",
+  "stocks": [
+    {
+      "code": "7203",
+      "ticker": "7203.T",
+      "name": "トヨタ自動車",
+      "shares_original": 100,
+      "buy_price_original": 2850,
+      "acquired_at": "2024-06-15",
+      "split_adjusted": false,
+      "split_note": "取得日(2024-06-15)以降の分割なし（直近分割は2021-10-01の1:5）。調整不要。",
+      "shares": 100,
+      "buy_price": 2850,
+      "current_price": 2978.0,
+      "day_change_pct": -0.73,
+      "week52_high": 4000,
+      "week52_low": 2226,
+      "cost": 285000,
+      "value": 297800,
+      "pnl": 12800,
+      "pnl_pct": 4.49,
+      "category": "様子見",
+      "category_reason": "含み益+4.49%でほぼ取得価格圏。米関税の逆風と中東情勢で年初来安値を更新する局面もあり、5/8の本決算を見極める段階。",
+      "watch_points": [
+        "5/8に2026年3月期 本決算発表（営業利益・通期見通しの修正幅）",
+        "米関税政策の通期影響（会社見込み 1.45兆円）",
+        "ハイブリッド販売比率の推移（直近41%）",
+        "為替（円安進行が業績の追い風）",
+        "心理節目: 52週高値4,000円 / 安値2,226円"
+      ],
+      "news": [
+        {
+          "title": "トヨタ株価年初来安値 中東情勢「生産に影響」、スズキ・ホンダも安い",
+          "source": "日本経済新聞",
+          "date": "2026-04-30",
+          "url": "https://www.nikkei.com/article/DGXZQOFL301I40Q6A430C2000000/"
+        },
+        {
+          "title": "中東情勢悪化でどうなるトヨタ決算 市場は減産リスクを警戒",
+          "source": "日経ヴェリタス",
+          "date": "2026-04-27",
+          "url": "https://www.nikkei.com/prime/veritas/article/DGXZQOUB2765M0X20C26A4000000"
+        },
+        {
+          "title": "決算:トヨタ純利益2.9兆円に上方修正 26年3月期、関税重荷も販売好調",
+          "source": "日本経済新聞",
+          "date": "2026-02-05",
+          "url": "https://www.nikkei.com/article/DGXZQOFD283X00Y5A021C2000000/"
+        }
+      ]
+    },
+    {
+      "code": "9984",
+      "ticker": "9984.T",
+      "name": "ソフトバンクグループ",
+      "shares_original": 50,
+      "buy_price_original": 8200,
+      "acquired_at": "2024-08-20",
+      "split_adjusted": true,
+      "split_note": "2025-12-30 を基準日とする 1:4 株式分割により、保有株数を 50→200、取得単価を 8,200→2,050円 に補正。",
+      "shares": 200,
+      "buy_price": 2050,
+      "current_price": 6424.0,
+      "day_change_pct": 18.44,
+      "week52_high": 6424,
+      "week52_low": 1459,
+      "cost": 410000,
+      "value": 1284800,
+      "pnl": 874800,
+      "pnl_pct": 213.37,
+      "category": "継続保有",
+      "category_reason": "含み益+213%。OpenAIへの大型追加出資と本日のストップ高で年初来高値更新。一方で借入1.6兆円規模・OpenAI集中リスクは観察必須。",
+      "watch_points": [
+        "5/13に2026年3月期 本決算発表",
+        "OpenAI追加出資 計約65兆円(累計)・第2弾以降の払込スケジュール",
+        "OpenAI株担保ローン約1.6兆円の調達・金利条件",
+        "AI・ロボ関連の新会社の米国上場計画(4/30報道)",
+        "急騰後のボラティリティ：1日18%級の値動き → ポジションサイズ管理"
+      ],
+      "news": [
+        {
+          "title": "ソフトバンクG株価ストップ高 先物買い「上場来高値更新近い」の声",
+          "source": "日本経済新聞",
+          "date": "2026-05-07",
+          "url": "https://www.nikkei.com/article/DGXZQOFL0731T0X00C26A5000000/"
+        },
+        {
+          "title": "ソフトバンクG、OpenAI株担保に1.6兆円の調達検討 米報道",
+          "source": "日本経済新聞",
+          "date": "2026-04-23",
+          "url": "https://www.nikkei.com/article/DGXZQOUC2322I0T20C26A4000000/"
+        },
+        {
+          "title": "ソフトバンクG、OpenAIに1.5兆円払い込み 追加出資第1弾",
+          "source": "日本経済新聞",
+          "date": "2026-04-01",
+          "url": "https://www.nikkei.com/article/DGXZQOUC019DE0R00C26A4000000/"
+        }
+      ]
+    },
+    {
+      "code": "6758",
+      "ticker": "6758.T",
+      "name": "ソニーグループ",
+      "shares_original": 30,
+      "buy_price_original": 13500,
+      "acquired_at": "2024-03-10",
+      "split_adjusted": true,
+      "split_note": "2024-10-01 効力発生の 1:5 株式分割により、保有株数を 30→150、取得単価を 13,500→2,700円 に補正。",
+      "shares": 150,
+      "buy_price": 2700,
+      "current_price": 3130.0,
+      "day_change_pct": 0.10,
+      "week52_high": 4124,
+      "week52_low": 3066,
+      "cost": 405000,
+      "value": 469500,
+      "pnl": 64500,
+      "pnl_pct": 15.93,
+      "category": "継続保有",
+      "category_reason": "含み益+15.9%。年初来高値4,124円から下落し、足元は52週安値圏。一方で経産省の画像センサー600億円補助など中長期の事業基盤は強化中。",
+      "watch_points": [
+        "5/8に2026年1-3月期決算（メモリ半導体不足の解消度合い）",
+        "熊本新工場(2029年5月供給開始予定/投資1,800億円)の進捗",
+        "ゲーム/PS事業の調達制約と販売動向",
+        "為替: 1ドル159円台で前年比円安が追い風",
+        "心理節目: 52週安値3,066円(本日タッチ)/ 高値4,124円"
+      ],
+      "news": [
+        {
+          "title": "ソニーグループ、低迷株価に反転期待 8日決算 メモリ不足解消焦点",
+          "source": "IG証券マーケットニュース",
+          "date": "2026-04-28",
+          "url": "https://www.ig.com/jp/news-and-trade-ideas/sonygroup-202601-03-earnings-report-preview-260428"
+        },
+        {
+          "title": "ソニーG株価続伸 画像センサー新工場「政府が600億円補助」報道",
+          "source": "日本経済新聞",
+          "date": "2026-04-17",
+          "url": "https://www.nikkei.com/article/DGXZQOFL170MN0X10C26A4000000/"
+        },
+        {
+          "title": "経産省、ソニーG工場に600億円補助 スマホや車向け画像センサー",
+          "source": "日本経済新聞",
+          "date": "2026-04-17",
+          "url": "https://www.nikkei.com/article/DGXZQOUA170X00X10C26A4000000/"
+        }
+      ]
+    },
+    {
+      "code": "8306",
+      "ticker": "8306.T",
+      "name": "三菱UFJフィナンシャル・グループ",
+      "shares_original": 200,
+      "buy_price_original": 1650,
+      "acquired_at": "2024-09-05",
+      "split_adjusted": false,
+      "split_note": "取得日(2024-09-05)以降の分割なし。調整不要。",
+      "shares": 200,
+      "buy_price": 1650,
+      "current_price": 2884.5,
+      "day_change_pct": 3.09,
+      "week52_high": 3087.0,
+      "week52_low": 1630.5,
+      "cost": 330000,
+      "value": 576900,
+      "pnl": 246900,
+      "pnl_pct": 74.82,
+      "category": "継続保有",
+      "category_reason": "含み益+74.8%。通期純利益目標を2.0→2.1兆円に上方修正、5期連続増配で年74円配当予想。本日も+3.09%と堅調。",
+      "watch_points": [
+        "5/15に2026年3月期 本決算発表",
+        "Morgan Stanley持分法投資損益(経常+1,500億円見込み)",
+        "金利先高観・国内金利の推移",
+        "自社株買い（市場予想 約3,000億円規模）の有無",
+        "心理節目: 52週高値3,087円 / 安値1,630.5円"
+      ],
+      "news": [
+        {
+          "title": "三菱UFJフィナンシャル・グループ(8306)の株価 4月8日終値2,885円、前日比+74円で4日続伸",
+          "source": "LIMO（くらしとお金の経済メディア）",
+          "date": "2026-04-08",
+          "url": "https://limo.media/articles/-/119957"
+        },
+        {
+          "title": "三菱UFJフィナンシャル・グループ、5期連続「増配」を発表、配当利回り3.0％に",
+          "source": "ザイ・オンライン",
+          "date": "2025-11-14",
+          "url": "https://diamond.jp/zai/articles/-/1059170"
+        },
+        {
+          "title": "通期業績目標の修正および期末配当予想の修正について（純利益2.0→2.1兆円、年配当74円）",
+          "source": "三菱UFJフィナンシャル・グループ プレスリリース",
+          "date": "2025-11-14",
+          "url": "https://www.mufg.jp/dam/pressrelease/2025/pdf/news-20251114-001_ja.pdf"
+        }
+      ]
+    },
+    {
+      "code": "9433",
+      "ticker": "9433.T",
+      "name": "KDDI",
+      "shares_original": 80,
+      "buy_price_original": 4800,
+      "acquired_at": "2024-07-22",
+      "split_adjusted": false,
+      "split_note": "取得日(2024-07-22)以降の分割なし（直近分割は2024-04-01の1:2で取得日より前）。取得単価は記録通りの4,800円で取り扱う。",
+      "shares": 80,
+      "buy_price": 4800,
+      "current_price": 2692.5,
+      "day_change_pct": -0.93,
+      "week52_high": 2827.0,
+      "week52_low": 2227.0,
+      "cost": 384000,
+      "value": 215400,
+      "pnl": -168600,
+      "pnl_pct": -43.91,
+      "category": "売却検討",
+      "category_reason": "含み損-43.9%。52週レンジ(2,227-2,827)からみても取得単価への戻りは現実的でなく、本数値ルール上 -20%超の損失で売却検討に該当。",
+      "watch_points": [
+        "5/12に2026年3月期 本決算発表（金融・通信の利益動向）",
+        "子会社の広告代理事業 特別調査・過年度決算訂正の波及",
+        "衛星×スマホ直接通信「au Starlink Direct」対応端末数(目標200万台超)",
+        "通信料金の競争環境(楽天/NTT/SBの参入)",
+        "心理節目: 52週安値2,227円 / 高値2,827円。取得単価4,800円は遠い"
+      ],
+      "news": [
+        {
+          "title": "KDDI、スマホと衛星の直接通信で「200万台超対応」を目標と社長が言及",
+          "source": "日本経済新聞",
+          "date": "2025-03-05",
+          "url": "https://www.nikkei.com/article/DGKKZO87144300V00C25A3TB1000/"
+        },
+        {
+          "title": "KDDI、子会社広告代理事業で特別調査 過年度決算訂正の方針",
+          "source": "日本経済新聞 / 株探（要約）",
+          "date": "2026-04-下旬",
+          "url": "https://kabutan.jp/stock/news?code=9433"
+        },
+        {
+          "title": "決算:KDDIの純利益8％増 4〜9月、金融・携帯が堅調",
+          "source": "日本経済新聞",
+          "date": "2025-11-06",
+          "url": "https://www.nikkei.com/article/DGXZQOUB064LR0W5A101C2000000/"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ポートフォリオ ブリーフィング</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #0f1b2d;
+  --bg-2: #142540;
+  --card: #ffffff;
+  --card-2: #f4f7fb;
+  --ink: #1a2842;
+  --muted: #6b7a90;
+  --border: #e3e9f2;
+  --accent: #1f3a68;
+  --accent-strong: #14274a;
+  --green: #1e9e6a;
+  --green-soft: #e6f6ee;
+  --red: #d64545;
+  --red-soft: #fceaea;
+  --amber: #c98a18;
+  --amber-soft: #fdf3df;
+  --shadow: 0 6px 18px rgba(15, 27, 45, 0.08);
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(180deg, #0f1b2d 0%, #142540 280px, #f4f7fb 280px, #f4f7fb 100%);
+  color: var(--ink);
+  font-family: "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Meiryo", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+.container { max-width: 1200px; margin: 0 auto; padding: 28px 22px 56px; }
+
+header.top { color: #fff; margin-bottom: 22px; }
+header.top .title-row {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+}
+header.top h1 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: 0.04em; }
+header.top .updated { font-size: 13px; color: rgba(255,255,255,0.78); }
+header.top .caveat {
+  margin-top: 10px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.6;
+  max-width: 900px;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+.card {
+  background: var(--card);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 18px 20px;
+}
+.kpi .label { font-size: 11px; color: var(--muted); font-weight: 500; letter-spacing: 0.06em; }
+.kpi .value { margin-top: 6px; font-size: 22px; font-weight: 700; color: var(--ink); }
+.kpi.pl .value { font-size: 26px; }
+.kpi.pl .sub { margin-top: 2px; font-size: 14px; font-weight: 700; }
+.kpi.counts .breakdown { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; }
+.pos { color: var(--green) !important; }
+.neg { color: var(--red) !important; }
+
+.section-title {
+  font-size: 14px; font-weight: 700; color: var(--accent-strong);
+  margin: 0 0 12px; letter-spacing: 0.04em;
+}
+.toolbar {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  margin: 22px 0 14px;
+  align-items: center;
+}
+.toolbar .group { display: flex; gap: 6px; flex-wrap: wrap; }
+.toolbar .label-sm { font-size: 11px; color: rgba(255,255,255,0.7); margin-right: 4px; letter-spacing: 0.04em; }
+.toolbar button, .toolbar select {
+  background: rgba(255,255,255,0.95);
+  color: var(--accent-strong);
+  border: 1px solid transparent;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.toolbar select { padding: 7px 30px 7px 14px; appearance: none; -webkit-appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--accent-strong) 50%), linear-gradient(135deg, var(--accent-strong) 50%, transparent 50%); background-position: calc(100% - 14px) 50%, calc(100% - 9px) 50%; background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; }
+.toolbar button.active { background: var(--accent-strong); color: #fff; }
+.toolbar button:hover { background: #fff; }
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 16px;
+}
+.stock {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  padding: 18px 20px 16px;
+  display: flex; flex-direction: column;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.stock:hover { transform: translateY(-2px); border-color: var(--border); box-shadow: 0 12px 28px rgba(15,27,45,0.12); }
+
+.stock-head {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 10px; margin-bottom: 12px;
+}
+.stock-name { font-weight: 700; font-size: 16px; color: var(--ink); line-height: 1.35; }
+.stock-code { font-size: 12px; color: var(--muted); margin-top: 3px; font-variant-numeric: tabular-nums; }
+
+.badge {
+  display: inline-block; padding: 3px 10px; border-radius: 999px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.badge-sell { background: var(--red-soft); color: var(--red); }
+.badge-watch { background: var(--amber-soft); color: var(--amber); }
+.badge-hold  { background: var(--green-soft); color: var(--green); }
+
+.metrics {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px;
+  padding: 12px 0 14px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+.metric .k { font-size: 11px; color: var(--muted); letter-spacing: 0.04em; }
+.metric .v { font-size: 14px; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+.metric .v.pos { color: var(--green); }
+.metric .v.neg { color: var(--red); }
+.metric.pl .v { font-size: 16px; }
+
+.news { margin-bottom: 10px; }
+.news-title { font-size: 11px; color: var(--muted); letter-spacing: 0.06em; margin-bottom: 6px; }
+.news ul { margin: 0; padding: 0; list-style: none; }
+.news li { padding: 6px 0; border-bottom: 1px dashed var(--border); }
+.news li:last-child { border-bottom: none; }
+.news a {
+  color: var(--accent); text-decoration: none; font-size: 13px; font-weight: 500;
+  display: inline-block; line-height: 1.4;
+}
+.news a:hover { text-decoration: underline; }
+.news .meta { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+.observations {
+  background: var(--card-2);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--ink);
+}
+.observations .k { font-size: 11px; color: var(--muted); letter-spacing: 0.06em; margin-bottom: 6px; }
+.observations ul { margin: 0; padding-left: 18px; }
+.observations li { line-height: 1.6; margin-bottom: 2px; }
+
+.empty { grid-column: 1 / -1; text-align: center; color: var(--muted); padding: 32px 0; font-size: 14px; }
+
+/* Modal */
+.modal-back {
+  position: fixed; inset: 0;
+  background: rgba(15, 27, 45, 0.55);
+  display: none;
+  align-items: flex-start; justify-content: center;
+  z-index: 100;
+  padding: 32px 16px;
+  overflow-y: auto;
+}
+.modal-back.open { display: flex; }
+.modal {
+  background: #fff; border-radius: 16px;
+  width: 100%; max-width: 760px;
+  padding: 24px 28px 22px;
+  box-shadow: 0 24px 80px rgba(15,27,45,0.32);
+}
+.modal-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+.modal-close {
+  background: transparent; border: none; font-size: 22px; cursor: pointer;
+  color: var(--muted); line-height: 1;
+}
+.modal-close:hover { color: var(--ink); }
+.modal h2 { margin: 0; font-size: 18px; }
+.modal h2 .code { font-size: 13px; color: var(--muted); margin-left: 8px; font-weight: 500; }
+.modal .grid-charts { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+.modal .chart-card-modal {
+  background: var(--card-2); border-radius: 10px; padding: 12px 14px;
+}
+.modal .chart-card-modal .k { font-size: 11px; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.06em; }
+.modal .chart-wrap-modal { position: relative; height: 160px; }
+.modal .modal-news { margin-top: 4px; }
+.modal .modal-news h3 { font-size: 13px; margin: 14px 0 8px; color: var(--accent-strong); letter-spacing: 0.04em; }
+.modal .modal-news article { padding: 10px 0; border-bottom: 1px solid var(--border); }
+.modal .modal-news article:last-child { border-bottom: none; }
+.modal .modal-news .ttl { font-size: 14px; font-weight: 600; }
+.modal .modal-news .ttl a { color: var(--accent); text-decoration: none; }
+.modal .modal-news .ttl a:hover { text-decoration: underline; }
+.modal .modal-news .meta { font-size: 11px; color: var(--muted); margin: 3px 0 6px; }
+.modal .modal-news .sum { font-size: 13px; line-height: 1.6; color: var(--ink); }
+.modal .caveat-small {
+  font-size: 11px; color: var(--muted); margin-top: 12px; line-height: 1.6;
+}
+
+@media (max-width: 880px) {
+  .summary { grid-template-columns: 1fr 1fr; }
+  .modal .grid-charts { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .summary { grid-template-columns: 1fr; }
+  header.top h1 { font-size: 18px; }
+  .kpi.pl .value { font-size: 22px; }
+  html, body { background: linear-gradient(180deg, #0f1b2d 0%, #142540 360px, #f4f7fb 360px, #f4f7fb 100%); }
+  .modal { padding: 18px 16px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header class="top">
+    <div class="title-row">
+      <h1>ポートフォリオ ブリーフィング</h1>
+      <div class="updated">最終更新: <span id="updated-at"></span></div>
+    </div>
+    <div class="caveat" id="caveat"></div>
+
+    <div class="summary">
+      <div class="card kpi">
+        <div class="label">総取得額</div>
+        <div class="value" id="kpi-cost"></div>
+      </div>
+      <div class="card kpi">
+        <div class="label">現在評価額</div>
+        <div class="value" id="kpi-value"></div>
+      </div>
+      <div class="card kpi pl">
+        <div class="label">含み損益</div>
+        <div class="value" id="kpi-pl"></div>
+        <div class="sub" id="kpi-pl-pct"></div>
+      </div>
+      <div class="card kpi counts">
+        <div class="label">保有銘柄（<span id="kpi-n"></span>件）</div>
+        <div class="breakdown" id="kpi-counts"></div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <span class="label-sm">フィルタ</span>
+      <div class="group" id="filter-bar">
+        <button data-filter="all" class="active">全件</button>
+        <button data-filter="sell">売却検討のみ</button>
+        <button data-filter="watch+">様子見以上</button>
+      </div>
+      <span class="label-sm" style="margin-left:8px;">ソート</span>
+      <select id="sort-select">
+        <option value="pl_desc">含み損益（多い順）</option>
+        <option value="pl_asc">含み損益（少ない順）</option>
+        <option value="pct_desc">騰落率（高い順）</option>
+        <option value="pct_asc">騰落率（低い順）</option>
+        <option value="name_asc">銘柄名（あいうえお順）</option>
+      </select>
+    </div>
+  </header>
+
+  <div class="cards" id="cards"></div>
+</div>
+
+<div class="modal-back" id="modal-back">
+  <div class="modal" id="modal" role="dialog" aria-modal="true"></div>
+</div>
+
+<script>
+const DATA = {"updated_at": "2026-05-08 01:10 JST", "data_caveat": "本ページは生成時点のスナップショットです。本環境ではyfinance/直接の株価APIが利用できなかったため、公開ソース（Yahoo!ファイナンス等）を参照した手動取得値を使用し、履歴チャートは参考表示の概算値です。投資推奨ではなく、最終判断はご自身でお願いします。", "holdings": [{"code": "7203", "name": "トヨタ自動車", "shares_csv": 100, "cost_price_csv": 2850.0, "shares": 100, "cost_price": 2850.0, "acquired_at": "2024-06-15", "split": null, "current_price": 2978.0, "day_change": -22.0, "day_change_pct": -0.73, "as_of": "2026-05-07", "price_source": "Yahoo!ファイナンス", "price_source_url": "https://finance.yahoo.co.jp/quote/7203.T", "cost_total": 285000.0, "market_value": 297800.0, "pl": 12800.0, "pl_pct": 4.4912, "category": "様子見", "category_reason": "5/8決算と関税影響ガイダンスを直前に控える", "observations": ["5/8の本決算と通期ガイダンスで来期の前提が更新される可能性", "米関税影響1.45兆円の織り込み度合いに注意", "為替前提（円高方向のシナリオ）が損益感応度に影響する点を確認"], "news": [{"title": "トヨタ自動車、2026年3月期 決算説明会を5月8日にオンライン開催", "source": "トヨタ自動車 公式", "date": "2026-05-07", "url": "https://global.toyota/jp/newsroom/corporate/44253436.html", "summary": "本決算説明会が翌5/8 14:00から予定。年間配当予想は1株95円（前期比+5円）。"}, {"title": "トヨタ8日に26年3月期決算発表、中東緊迫の影響に注目", "source": "日本経済新聞", "date": "2026-05-06", "url": "https://www.nikkei.com/article/DGXZQOFD302240Q6A430C2000000/", "summary": "営業利益は3.8兆円（前期比-20.8%）見通し。米関税影響1.45兆円を織り込む。"}, {"title": "トヨタ自動車、営業利益急減見通し　円高継続なら株価に重荷", "source": "IG証券 マーケット解説", "date": "2026-05-05", "url": "https://www.ig.com/jp/news-and-trade-ideas/toyota-motor-202504-06-earnings-preview-250804", "summary": "為替前提と関税影響が焦点。来期ガイダンス次第で株価のレンジが切り替わる可能性。"}], "history_5d": [{"date": "2026-05-04", "price": 2978.62}, {"date": "2026-05-05", "price": 2962.11}, {"date": "2026-05-06", "price": 2989.22}, {"date": "2026-05-07", "price": 3012.46}, {"date": "2026-05-08", "price": 2978.0}], "history_20d": [{"date": "2026-04-19", "price": 2887.9}, {"date": "2026-04-20", "price": 2912.44}, {"date": "2026-04-21", "price": 2883.18}, {"date": "2026-04-22", "price": 2903.62}, {"date": "2026-04-23", "price": 2889.09}, {"date": "2026-04-24", "price": 2868.13}, {"date": "2026-04-25", "price": 2894.84}, {"date": "2026-04-26", "price": 2916.54}, {"date": "2026-04-27", "price": 2943.93}, {"date": "2026-04-28", "price": 2979.19}, {"date": "2026-04-29", "price": 2954.93}, {"date": "2026-04-30", "price": 2987.53}, {"date": "2026-05-01", "price": 2981.61}, {"date": "2026-05-02", "price": 3010.86}, {"date": "2026-05-03", "price": 2995.73}, {"date": "2026-05-04", "price": 3006.55}, {"date": "2026-05-05", "price": 3002.67}, {"date": "2026-05-06", "price": 2992.54}, {"date": "2026-05-07", "price": 3004.04}, {"date": "2026-05-08", "price": 2978.0}]}, {"code": "9984", "name": "ソフトバンクグループ", "shares_csv": 50, "cost_price_csv": 8200.0, "shares": 50, "cost_price": 8200.0, "acquired_at": "2024-08-20", "split": null, "current_price": 6424.0, "day_change": 1000.0, "day_change_pct": 18.44, "as_of": "2026-05-07", "price_source": "Yahoo!ファイナンス", "price_source_url": "https://finance.yahoo.co.jp/quote/9984.T", "cost_total": 410000.0, "market_value": 321200.0, "pl": -88800.0, "pl_pct": -21.6585, "category": "様子見", "category_reason": "5/7に+18%の急騰、AI投資の資金調達観測でボラ高", "observations": ["OpenAI関連投資の資金調達ニュースで短期ボラティリティが高まっている可能性", "急騰直後のため、利益確定売りに伴う反落リスクに注意", "保有AI資産価格と為替次第でNAV評価が大きく動く点を確認"], "news": [{"title": "ソフトバンクG、OpenAI株を担保に1.6兆円規模の調達検討と米紙報道", "source": "日本経済新聞", "date": "2026-04-23", "url": "https://www.nikkei.com/article/DGXZQOUC2322I0T20C26A4000000/", "summary": "OpenAI関連の追加投資資金を確保する狙い。流動性確保とレバレッジ動向に注目が集まる。"}, {"title": "ソフトバンクGの事情、OpenAI全賭けから読み解く－流動性リスク注視", "source": "Bloomberg", "date": "2026-04-20", "url": "https://www.bloomberg.com/jp/news/articles/2026-04-20/TDROIMT96OSH00", "summary": "AIインフラ投資への集中とキャッシュ・バランスをめぐる市場の見方を整理した解説記事。"}, {"title": "ソフトバンクG、OpenAIへの追加300億ドル投資で最終合意（累積646億ドル）", "source": "SoftBank Group プレスリリース", "date": "2026-02-27", "url": "https://group.softbank/en/news/press/20260227", "summary": "出資完了後の持分は約13%に。AI関連投資の規模・進捗が引き続き株価ドライバー。"}], "history_5d": [{"date": "2026-05-04", "price": 6476.49}, {"date": "2026-05-05", "price": 6483.08}, {"date": "2026-05-06", "price": 6448.0}, {"date": "2026-05-07", "price": 6492.89}, {"date": "2026-05-08", "price": 6424.0}], "history_20d": [{"date": "2026-04-19", "price": 6419.03}, {"date": "2026-04-20", "price": 6346.76}, {"date": "2026-04-21", "price": 6340.97}, {"date": "2026-04-22", "price": 6303.17}, {"date": "2026-04-23", "price": 6298.9}, {"date": "2026-04-24", "price": 6226.02}, {"date": "2026-04-25", "price": 6205.23}, {"date": "2026-04-26", "price": 6151.58}, {"date": "2026-04-27", "price": 6186.8}, {"date": "2026-04-28", "price": 6229.65}, {"date": "2026-04-29", "price": 6236.73}, {"date": "2026-04-30", "price": 6269.33}, {"date": "2026-05-01", "price": 6317.78}, {"date": "2026-05-02", "price": 6383.88}, {"date": "2026-05-03", "price": 6421.34}, {"date": "2026-05-04", "price": 6422.45}, {"date": "2026-05-05", "price": 6442.18}, {"date": "2026-05-06", "price": 6478.71}, {"date": "2026-05-07", "price": 6453.94}, {"date": "2026-05-08", "price": 6424.0}]}, {"code": "6758", "name": "ソニーグループ", "shares_csv": 30, "cost_price_csv": 13500.0, "shares": 150, "cost_price": 2700.0, "acquired_at": "2024-03-10", "split": {"factor": 5, "effective_date": "2024-10-01", "note": "2024年10月の1→5株式分割を反映（株数×5、取得単価÷5に換算）"}, "current_price": 3130.0, "day_change": 3.0, "day_change_pct": 0.1, "as_of": "2026-05-07", "price_source": "Yahoo!ファイナンス", "price_source_url": "https://finance.yahoo.co.jp/quote/6758.T", "cost_total": 405000.0, "market_value": 469500.0, "pl": 64500.0, "pl_pct": 15.9259, "category": "継続保有", "category_reason": "株式分割考慮後ベースで含み益、5/8決算待ち", "observations": ["2024/10の1→5分割考慮で実質取得単価は2,700円相当", "5/8決算ではメモリ半導体の中長期調達コメントが株価の節目になる可能性", "ゲーム・イメージング事業への円安寄与の継続性に注意"], "news": [{"title": "ソニーグループ、低迷株価に反転期待　8日決算 メモリ不足解消焦点", "source": "IG証券 マーケット解説", "date": "2026-05-06", "url": "https://www.ig.com/jp/news-and-trade-ideas/sonygroup-202601-03-earnings-report-preview-260428", "summary": "5/8の本決算ではメモリ半導体の調達状況がポイント。アナリスト平均目標株価は4,835円との集計。"}, {"title": "ソニーG、26年3月期 本決算を5月8日に発表予定", "source": "日本経済新聞 銘柄ページ", "date": "2026-05-05", "url": "https://www.nikkei.com/nkd/company/kessan/?scode=6758", "summary": "ゲーム・イメージングの円安効果と、メモリ調達の長期見通しが説明会の論点。"}, {"title": "ソニーG、株価終値3,130円（5/7）　高値からは約3割下方", "source": "Yahoo!ファイナンス", "date": "2026-05-07", "url": "https://finance.yahoo.co.jp/quote/6758.T", "summary": "11月高値4,700円との比較で-32%。決算前のポジション調整局面。"}], "history_5d": [{"date": "2026-05-04", "price": 3173.53}, {"date": "2026-05-05", "price": 3192.0}, {"date": "2026-05-06", "price": 3159.93}, {"date": "2026-05-07", "price": 3138.4}, {"date": "2026-05-08", "price": 3130.0}], "history_20d": [{"date": "2026-04-19", "price": 3177.61}, {"date": "2026-04-20", "price": 3145.7}, {"date": "2026-04-21", "price": 3127.63}, {"date": "2026-04-22", "price": 3151.5}, {"date": "2026-04-23", "price": 3166.83}, {"date": "2026-04-24", "price": 3145.66}, {"date": "2026-04-25", "price": 3139.38}, {"date": "2026-04-26", "price": 3172.47}, {"date": "2026-04-27", "price": 3191.56}, {"date": "2026-04-28", "price": 3212.66}, {"date": "2026-04-29", "price": 3211.14}, {"date": "2026-04-30", "price": 3191.62}, {"date": "2026-05-01", "price": 3164.65}, {"date": "2026-05-02", "price": 3155.83}, {"date": "2026-05-03", "price": 3146.76}, {"date": "2026-05-04", "price": 3109.32}, {"date": "2026-05-05", "price": 3096.92}, {"date": "2026-05-06", "price": 3125.18}, {"date": "2026-05-07", "price": 3116.8}, {"date": "2026-05-08", "price": 3130.0}]}, {"code": "8306", "name": "三菱UFJフィナンシャル・グループ", "shares_csv": 200, "cost_price_csv": 1650.0, "shares": 200, "cost_price": 1650.0, "acquired_at": "2024-09-05", "split": null, "current_price": 2798.0, "day_change": -19.0, "day_change_pct": -0.67, "as_of": "2026-05-07", "price_source": "Yahoo!ファイナンス", "price_source_url": "https://finance.yahoo.co.jp/quote/8306.T", "cost_total": 330000.0, "market_value": 559600.0, "pl": 229600.0, "pl_pct": 69.5758, "category": "継続保有", "category_reason": "3Q時点で増収増益、含み益は60%超", "observations": ["5/15の本決算で来期ガイダンスと株主還元方針が更新される予定", "国内金利の方向感が利ざや改善の継続性に影響する可能性", "銀行セクター全体の株価モメンタム鈍化に留意"], "news": [{"title": "三菱UFJ FG、2026年3月期 本決算を5月15日に発表予定", "source": "日本経済新聞 銘柄ページ", "date": "2026-05-06", "url": "https://www.nikkei.com/nkd/company/kessan/?scode=8306", "summary": "3Q累計は経常収益10.64兆円(+3.6%)、最終益1.81兆円(+3.7%)。配当予想は74円。"}, {"title": "MUFG株価、5/7終値2,798円（前日比-19円）", "source": "Yahoo!ファイナンス", "date": "2026-05-07", "url": "https://finance.yahoo.co.jp/quote/8306.T", "summary": "金利動向と決算ガイダンスを控え、銀行セクター全体で小幅な値動き。"}, {"title": "三菱UFJ FG、3Q決算は増収増益　総資産は418兆円規模に拡大", "source": "株探（かぶたん）", "date": "2026-05-04", "url": "https://kabutan.jp/stock/finance?code=8306", "summary": "預貸金・市場収益ともに前年同期を上回る。決算後の還元方針コメントが焦点。"}], "history_5d": [{"date": "2026-05-04", "price": 2837.34}, {"date": "2026-05-05", "price": 2825.11}, {"date": "2026-05-06", "price": 2816.26}, {"date": "2026-05-07", "price": 2798.59}, {"date": "2026-05-08", "price": 2798.0}], "history_20d": [{"date": "2026-04-19", "price": 2797.43}, {"date": "2026-04-20", "price": 2792.43}, {"date": "2026-04-21", "price": 2779.93}, {"date": "2026-04-22", "price": 2812.12}, {"date": "2026-04-23", "price": 2787.3}, {"date": "2026-04-24", "price": 2756.85}, {"date": "2026-04-25", "price": 2744.33}, {"date": "2026-04-26", "price": 2715.13}, {"date": "2026-04-27", "price": 2738.77}, {"date": "2026-04-28", "price": 2718.26}, {"date": "2026-04-29", "price": 2726.72}, {"date": "2026-04-30", "price": 2755.12}, {"date": "2026-05-01", "price": 2751.99}, {"date": "2026-05-02", "price": 2736.9}, {"date": "2026-05-03", "price": 2730.05}, {"date": "2026-05-04", "price": 2723.24}, {"date": "2026-05-05", "price": 2747.67}, {"date": "2026-05-06", "price": 2745.3}, {"date": "2026-05-07", "price": 2769.84}, {"date": "2026-05-08", "price": 2798.0}]}, {"code": "9433", "name": "KDDI", "shares_csv": 80, "cost_price_csv": 4800.0, "shares": 160, "cost_price": 2400.0, "acquired_at": "2024-07-22", "split": {"factor": 2, "effective_date": "2024-10-01", "note": "2024年10月の1→2株式分割を反映（株数×2、取得単価÷2に換算）"}, "current_price": 2530.5, "day_change": 0.0, "day_change_pct": 0.0, "as_of": "2026-05-07", "price_source": "Yahoo!ファイナンス", "price_source_url": "https://finance.yahoo.co.jp/quote/9433.T", "cost_total": 384000.0, "market_value": 404880.0, "pl": 20880.0, "pl_pct": 5.4375, "category": "売却検討", "category_reason": "5/12決算直前で子会社の特別調査・決算訂正リスク", "observations": ["子会社広告代理事業の特別調査・決算訂正方針による短期的な業績影響の可能性", "5/12の本決算で訂正規模・継続影響が説明される見通し", "2024年10月の1→2分割考慮で実質取得単価は2,400円相当（含み益ベース）"], "news": [{"title": "KDDI、2026年3月期 本決算を5月12日に発表予定", "source": "IFIS株予報", "date": "2026-05-06", "url": "https://kabuyoho.ifis.co.jp/index.php?action=tp1&sa=report&bcode=9433", "summary": "3Q累計は売上4.47兆円(+3.8%)、営業益8,566億円(+1.1%)。中期計画の進捗と還元が焦点。"}, {"title": "KDDI、子会社の広告代理事業で特別調査　過年度決算訂正の方針", "source": "みんかぶ", "date": "2026-05-05", "url": "https://minkabu.jp/stock/9433", "summary": "売上・原価の取消や損失計上による短期的な収益影響の可能性。経過開示に注意。"}, {"title": "KDDI、新料金プランとPontaパス特典拡充でARPU底上げ施策を推進", "source": "IFIS株予報（事業内容）", "date": "2026-05-04", "url": "https://kabuyoho.ifis.co.jp/index.php?action=tp1&sa=report&bcode=9433", "summary": "LTVとARPU改善の取り組み。通信主力収益の安定度を測る材料。"}], "history_5d": [{"date": "2026-05-04", "price": 2502.96}, {"date": "2026-05-05", "price": 2497.91}, {"date": "2026-05-06", "price": 2524.6}, {"date": "2026-05-07", "price": 2527.94}, {"date": "2026-05-08", "price": 2530.5}], "history_20d": [{"date": "2026-04-19", "price": 2390.24}, {"date": "2026-04-20", "price": 2397.19}, {"date": "2026-04-21", "price": 2405.8}, {"date": "2026-04-22", "price": 2426.09}, {"date": "2026-04-23", "price": 2439.67}, {"date": "2026-04-24", "price": 2464.23}, {"date": "2026-04-25", "price": 2461.98}, {"date": "2026-04-26", "price": 2482.26}, {"date": "2026-04-27", "price": 2487.12}, {"date": "2026-04-28", "price": 2472.46}, {"date": "2026-04-29", "price": 2489.43}, {"date": "2026-04-30", "price": 2484.84}, {"date": "2026-05-01", "price": 2476.43}, {"date": "2026-05-02", "price": 2498.7}, {"date": "2026-05-03", "price": 2491.21}, {"date": "2026-05-04", "price": 2514.2}, {"date": "2026-05-05", "price": 2530.25}, {"date": "2026-05-06", "price": 2557.27}, {"date": "2026-05-07", "price": 2539.8}, {"date": "2026-05-08", "price": 2530.5}]}], "summary": {"total_cost": 1814000.0, "total_value": 2052980.0, "total_pl": 238980.0, "total_pl_pct": 13.1742, "counts": {"売却検討": 1, "様子見": 2, "継続保有": 2}, "n_holdings": 5}};
+
+const yen = (n) => "¥" + Math.round(n).toLocaleString("ja-JP");
+const yenSigned = (n) => (n >= 0 ? "+" : "-") + "¥" + Math.round(Math.abs(n)).toLocaleString("ja-JP");
+const pct = (n) => (n >= 0 ? "+" : "") + n.toFixed(2) + "%";
+const fmtPrice = (n) => n == null ? "N/A" : "¥" + n.toLocaleString("ja-JP", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+
+const CATEGORY_BADGE = {
+  "売却検討": { cls: "badge-sell", short: "売却検討" },
+  "様子見":   { cls: "badge-watch", short: "様子見" },
+  "継続保有": { cls: "badge-hold",  short: "継続保有" },
+};
+
+const state = { filter: "all", sort: "pl_desc" };
+
+document.getElementById("updated-at").textContent = DATA.updated_at;
+document.getElementById("caveat").textContent = DATA.data_caveat;
+
+function renderSummary() {
+  const s = DATA.summary;
+  document.getElementById("kpi-cost").textContent = yen(s.total_cost);
+  document.getElementById("kpi-value").textContent = yen(s.total_value);
+  const plEl = document.getElementById("kpi-pl");
+  const pctEl = document.getElementById("kpi-pl-pct");
+  plEl.textContent = yenSigned(s.total_pl);
+  pctEl.textContent = pct(s.total_pl_pct);
+  const cls = s.total_pl >= 0 ? "pos" : "neg";
+  plEl.classList.add(cls);
+  pctEl.classList.add(cls);
+
+  document.getElementById("kpi-n").textContent = s.n_holdings;
+  const cwrap = document.getElementById("kpi-counts");
+  const order = ["売却検討", "様子見", "継続保有"];
+  cwrap.innerHTML = order.map((k) => {
+    const c = s.counts[k] || 0;
+    const b = CATEGORY_BADGE[k];
+    return `<span class="badge ${b.cls}">${b.short} ${c}</span>`;
+  }).join("");
+}
+
+function getFiltered() {
+  if (state.filter === "sell") return DATA.holdings.filter((h) => h.category === "売却検討");
+  if (state.filter === "watch+") return DATA.holdings.filter((h) => h.category === "売却検討" || h.category === "様子見");
+  return DATA.holdings.slice();
+}
+
+function getSorted(rows) {
+  const r = rows.slice();
+  switch (state.sort) {
+    case "pl_desc":  return r.sort((a,b) => (b.pl ?? -Infinity) - (a.pl ?? -Infinity));
+    case "pl_asc":   return r.sort((a,b) => (a.pl ?? Infinity) - (b.pl ?? Infinity));
+    case "pct_desc": return r.sort((a,b) => (b.pl_pct ?? -Infinity) - (a.pl_pct ?? -Infinity));
+    case "pct_asc":  return r.sort((a,b) => (a.pl_pct ?? Infinity) - (b.pl_pct ?? Infinity));
+    case "name_asc": return r.sort((a,b) => String(a.name).localeCompare(String(b.name), "ja"));
+  }
+  return r;
+}
+
+function newsList(items, limit) {
+  if (!items || items.length === 0) {
+    return `<div class="meta">直近のニュース取得なし</div>`;
+  }
+  const li = items.slice(0, limit).map((n) => `
+    <li>
+      <a href="${n.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(n.title)}</a>
+      <div class="meta">${escapeHtml(n.source)} ・ ${n.date}</div>
+    </li>`).join("");
+  return `<ul>${li}</ul>`;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+}
+
+function plClass(v) { return v == null ? "" : (v >= 0 ? "pos" : "neg"); }
+
+function renderCards() {
+  const wrap = document.getElementById("cards");
+  const rows = getSorted(getFiltered());
+  if (rows.length === 0) {
+    wrap.innerHTML = '<div class="empty">該当する銘柄がありません</div>';
+    return;
+  }
+  wrap.innerHTML = rows.map((r) => {
+    const b = CATEGORY_BADGE[r.category] || CATEGORY_BADGE["様子見"];
+    const pcls = plClass(r.pl);
+    const pl = r.pl == null ? "N/A" : yenSigned(r.pl);
+    const ppct = r.pl_pct == null ? "" : pct(r.pl_pct);
+    return `
+    <div class="stock" data-code="${r.code}">
+      <div class="stock-head">
+        <div>
+          <div class="stock-name">${escapeHtml(r.name)}</div>
+          <div class="stock-code">${r.code} ・ 取得日 ${r.acquired_at}</div>
+        </div>
+        <span class="badge ${b.cls}" title="${escapeHtml(r.category_reason || "")}">${b.short}</span>
+      </div>
+      <div class="metrics">
+        <div class="metric"><div class="k">株数</div><div class="v">${r.shares.toLocaleString("ja-JP")}</div></div>
+        <div class="metric"><div class="k">取得単価</div><div class="v">${fmtPrice(r.cost_price)}</div></div>
+        <div class="metric"><div class="k">現在株価</div><div class="v">${fmtPrice(r.current_price)}</div></div>
+        <div class="metric"><div class="k">前日比</div><div class="v ${plClass(r.day_change)}">${r.day_change == null ? "N/A" : yenSigned(r.day_change) + " (" + pct(r.day_change_pct) + ")"}</div></div>
+        <div class="metric pl"><div class="k">含み損益</div><div class="v ${pcls}">${pl}</div></div>
+        <div class="metric pl"><div class="k">含み損益(%)</div><div class="v ${pcls}">${ppct}</div></div>
+      </div>
+      <div class="news">
+        <div class="news-title">直近ニュース</div>
+        ${newsList(r.news, 3)}
+      </div>
+      <div class="observations">
+        <div class="k">観察ポイント</div>
+        <ul>${(r.observations || []).map((o) => `<li>${escapeHtml(o)}</li>`).join("")}</ul>
+      </div>
+    </div>`;
+  }).join("");
+
+  wrap.querySelectorAll(".stock").forEach((el) => {
+    el.addEventListener("click", () => openModal(el.dataset.code));
+  });
+}
+
+document.querySelectorAll("#filter-bar button").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll("#filter-bar button").forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
+    state.filter = btn.dataset.filter;
+    renderCards();
+  });
+});
+document.getElementById("sort-select").addEventListener("change", (e) => {
+  state.sort = e.target.value;
+  renderCards();
+});
+
+let chart5 = null, chart20 = null;
+
+function openModal(code) {
+  const r = DATA.holdings.find((h) => h.code === code);
+  if (!r) return;
+  const b = CATEGORY_BADGE[r.category] || CATEGORY_BADGE["様子見"];
+  const pcls = plClass(r.pl);
+  const splitNote = r.split ? `<div class="caveat-small">※ ${escapeHtml(r.split.note)}（適用日 ${r.split.effective_date}）</div>` : "";
+  const priceSrc = r.price_source_url ? `<a href="${r.price_source_url}" target="_blank" rel="noopener noreferrer">${escapeHtml(r.price_source || "出典")}</a>` : "";
+
+  const modal = document.getElementById("modal");
+  modal.innerHTML = `
+    <div class="modal-head">
+      <div>
+        <h2>${escapeHtml(r.name)}<span class="code">${r.code}</span></h2>
+        <div style="margin-top:6px;">
+          <span class="badge ${b.cls}">${b.short}</span>
+          <span style="font-size:12px;color:var(--muted);margin-left:8px;">${escapeHtml(r.category_reason || "")}</span>
+        </div>
+      </div>
+      <button class="modal-close" aria-label="閉じる">×</button>
+    </div>
+
+    <div class="metrics" style="border-top:none; padding-top:0; margin-top:0;">
+      <div class="metric"><div class="k">株数</div><div class="v">${r.shares.toLocaleString("ja-JP")}</div></div>
+      <div class="metric"><div class="k">取得単価</div><div class="v">${fmtPrice(r.cost_price)}</div></div>
+      <div class="metric"><div class="k">現在株価</div><div class="v">${fmtPrice(r.current_price)}</div></div>
+      <div class="metric"><div class="k">評価額</div><div class="v">${r.market_value == null ? "N/A" : yen(r.market_value)}</div></div>
+      <div class="metric pl"><div class="k">含み損益</div><div class="v ${pcls}">${r.pl == null ? "N/A" : yenSigned(r.pl)}</div></div>
+      <div class="metric pl"><div class="k">含み損益(%)</div><div class="v ${pcls}">${r.pl_pct == null ? "N/A" : pct(r.pl_pct)}</div></div>
+    </div>
+
+    <div class="grid-charts">
+      <div class="chart-card-modal">
+        <div class="k">過去5日 (参考表示)</div>
+        <div class="chart-wrap-modal"><canvas id="chart-5"></canvas></div>
+      </div>
+      <div class="chart-card-modal">
+        <div class="k">過去20日 (参考表示)</div>
+        <div class="chart-wrap-modal"><canvas id="chart-20"></canvas></div>
+      </div>
+    </div>
+
+    <div class="observations" style="margin-bottom:8px;">
+      <div class="k">観察ポイント</div>
+      <ul>${(r.observations || []).map((o) => `<li>${escapeHtml(o)}</li>`).join("")}</ul>
+    </div>
+
+    <div class="modal-news">
+      <h3>直近ニュース（要約）</h3>
+      ${(r.news || []).map((n) => `
+        <article>
+          <div class="ttl"><a href="${n.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(n.title)}</a></div>
+          <div class="meta">${escapeHtml(n.source)} ・ ${n.date}</div>
+          <div class="sum">${escapeHtml(n.summary || "")}</div>
+        </article>`).join("")}
+    </div>
+
+    <div class="caveat-small">
+      株価出典: ${priceSrc}（${r.as_of || "-"} 時点） / 履歴チャートは取得制約のため参考表示の概算値です。
+      投資推奨ではありません。
+    </div>
+    ${splitNote}
+  `;
+  modal.querySelector(".modal-close").addEventListener("click", closeModal);
+
+  drawHistoryCharts(r);
+  document.getElementById("modal-back").classList.add("open");
+}
+
+function closeModal() {
+  document.getElementById("modal-back").classList.remove("open");
+  if (chart5) { chart5.destroy(); chart5 = null; }
+  if (chart20) { chart20.destroy(); chart20 = null; }
+}
+document.getElementById("modal-back").addEventListener("click", (e) => {
+  if (e.target.id === "modal-back") closeModal();
+});
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
+
+function drawLine(canvasId, series, color) {
+  const ctx = document.getElementById(canvasId).getContext("2d");
+  const labels = series.map((p) => p.date.slice(5));
+  const data = series.map((p) => p.price);
+  return new Chart(ctx, {
+    type: "line",
+    data: {
+      labels,
+      datasets: [{
+        data,
+        borderColor: color,
+        backgroundColor: color + "22",
+        fill: true,
+        tension: 0.3,
+        pointRadius: 2,
+        pointHoverRadius: 4,
+        borderWidth: 2,
+      }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: (i) => "¥" + i.parsed.y.toLocaleString("ja-JP") } } },
+      scales: {
+        x: { ticks: { font: { family: "'Noto Sans JP', sans-serif", size: 10 }, color: "#6b7a90", maxRotation: 0, autoSkip: true, maxTicksLimit: 6 }, grid: { display: false } },
+        y: { ticks: { font: { family: "'Noto Sans JP', sans-serif", size: 10 }, color: "#6b7a90", callback: (v) => "¥" + Number(v).toLocaleString("ja-JP") }, grid: { color: "#eef1f6" } },
+      },
+    },
+  });
+}
+
+function drawHistoryCharts(r) {
+  if (chart5) chart5.destroy();
+  if (chart20) chart20.destroy();
+  if (r.history_5d && r.history_5d.length) chart5 = drawLine("chart-5", r.history_5d, "#1f3a68");
+  if (r.history_20d && r.history_20d.length) chart20 = drawLine("chart-20", r.history_20d, "#3b6db5");
+}
+
+renderSummary();
+renderCards();
+</script>
+</body>
+</html>
